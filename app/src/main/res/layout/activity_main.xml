@@ -1,13 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
-    <CalendarView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></CalendarView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <CalendarView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></CalendarView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#eef0f4"
+            android:padding="5dp"
+            android:text="今天 农历 七月初七"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
 
-</android.support.constraint.ConstraintLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+            <LinearLayout
+                android:id="@+id/eventContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider"
+                android:showDividers="middle"
+                android:orientation="vertical">
+                <!--<include layout="@layout/events"/>-->
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/add_corner"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:elevation="3dp">
+            <Button
+                android:id="@+id/bAddEvents"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/ic_add"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
