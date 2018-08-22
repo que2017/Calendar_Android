@@ -1,16 +1,24 @@
 package com.demo.zhang.calendar;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private Button bAdd;
     private LinearLayout eventContainer;
+    private CalendarView calendarView;
+
+    private String currDate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,8 +26,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bAdd = (Button)findViewById(R.id.bAddEvents);
         eventContainer = (LinearLayout)findViewById(R.id.eventContainer);
+        calendarView = (CalendarView)findViewById(R.id.calendarView);
+
+        Calendar calendar = Calendar.getInstance();
+        currDate = dateToString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
+//        Toast.makeText(MainActivity.this, currDate, Toast.LENGTH_SHORT).show();
 
         bAdd.setOnClickListener(this);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                currDate = dateToString(year, month + 1, dayOfMonth);
+//                Toast.makeText(MainActivity.this, currDate, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -28,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bAddEvents:
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, AddEvent.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("currDate", currDate);
+                intent.putExtras(bundle);
                 MainActivity.this.startActivity(intent);
                 break;
         }
@@ -44,5 +67,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         eventContainer.addView(event);
+    }
+
+    private String dateToString(int year, int month, int day){
+        return year + DateOperatorUtil.getTwoDigits(month) + DateOperatorUtil.getTwoDigits(day);
     }
 }
