@@ -33,6 +33,7 @@
             android:background="#bebbbb"/>
 
         <TextView
+            android:id="@+id/tShowTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="事情"
@@ -59,6 +60,7 @@
                     android:background="@drawable/ic_position"/>
             </LinearLayout>
             <TextView
+                android:id="@+id/tShowPlace"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="公司"
@@ -84,9 +86,10 @@
                     android:background="@drawable/ic_time"/>
             </LinearLayout>
             <TextView
+                android:id="@+id/tShowTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="公司"
+                android:text="开始时间-结束时间"
                 android:textSize="20dp"
                 android:textColor="#000"
                 android:layout_weight="2"/>

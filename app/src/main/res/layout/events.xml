@@ -28,18 +28,19 @@
             android:layout_weight="2"
             android:gravity="center">
             <TextView
+                android:id="@+id/tEventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:textSize="20dp"
                 android:textColor="@color/black"
-                android:text="标题"/>
+                android:text=""/>
             <TextView
-                android:id="@+id/etTitle"
+                android:id="@+id/tEventPlace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"
-                android:text="地点"/>
+                android:text=""/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,17 +49,18 @@
             android:gravity="center"
             android:layout_weight="8">
             <TextView
+                android:id="@+id/tStartTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:textSize="16dp"
-                android:text="开始时间"/>
+                android:text=""/>
             <TextView
-                android:id="@+id/tPlace"
+                android:id="@+id/tEndTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"
-                android:text="结束时间"/>
+                android:text=""/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

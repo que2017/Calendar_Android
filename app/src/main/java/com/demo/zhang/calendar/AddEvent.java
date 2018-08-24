@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class AddEvent extends Activity implements View.OnClickListener {
+    private final String TAG = AddEvent.class.getSimpleName();
+
     private Button bQuit;
     private Button bCorrect;
     private EditText eventTitle;
@@ -24,7 +27,9 @@ public class AddEvent extends Activity implements View.OnClickListener {
     private TextView startTimeShow;
     private TextView endTimeShow;
 
+    private int isFullday = 0;
     private String currDate;
+    private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +53,16 @@ public class AddEvent extends Activity implements View.OnClickListener {
         Bundle bundle = this.getIntent().getExtras();
         currDate = (String) bundle.get("currDate");
 //        Toast.makeText(this, currDate, Toast.LENGTH_SHORT).show();
+
+        // 初始化startTimeShow 和 endTimeShow 的text
+        int currHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currMin = calendar.get(Calendar.MINUTE);
+        startTimeShow.setText(stringTime(currHour, currMin));
+        if(currHour >= 23){
+            endTimeShow.setText(stringTime(0, 0));
+        }else{
+            endTimeShow.setText(stringTime(currHour + 1, currMin));
+        }
     }
 
     @Override
@@ -69,6 +84,20 @@ public class AddEvent extends Activity implements View.OnClickListener {
     }
 
     private void addEventToTable() {
+        CalendarDatabase cd = new CalendarDatabase(this);
+        String title = eventTitle.getText().toString();
+        String place = eventPlace.getText().toString();
+        String start = startTimeShow.getText().toString();
+        String end   = endTimeShow.getText().toString();
+        if((null == place) || (null == start) || (null == end)){
+            Toast.makeText(this, "地点和时间不能为空！", Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "place or time is null");
+            return;
+        }
+        cd.open();
+        cd.insert_Event(currDate, title, place, isFullday, start, end);
+        cd.close();
+        this.finish();
     }
 
     private void pickStartTime() {
@@ -80,12 +109,16 @@ public class AddEvent extends Activity implements View.OnClickListener {
     }
 
     private void pickTime(final TextView tv){
-        Calendar calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();
         new TimePickerDialog(this, 2, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                tv.setText(DateOperatorUtil.getTwoDigits(hourOfDay) + ":" + DateOperatorUtil.getTwoDigits(minute));
+                tv.setText(stringTime(hourOfDay, minute));
             }
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+    }
+
+    private String stringTime(int hour, int minute){
+        return DateOperatorUtil.getTwoDigits(hour) + ":" + DateOperatorUtil.getTwoDigits(minute);
     }
 }

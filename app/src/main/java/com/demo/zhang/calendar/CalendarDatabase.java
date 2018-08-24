@@ -1,22 +1,37 @@
 package com.demo.zhang.calendar;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.Date;
 
 public class CalendarDatabase {
+    private static final String TAG = CalendarDatabase.class.getSimpleName();
+
     private static final String DB_NAME = "Calendar.db";
     private static final int DB_VERSION = 1;
     private static final String TB_NAME = "events_table";
 
-    private static final String KEY_ROWID = "_id";
-    private static final String DATE      = "date";
-    private static final String EVENT_TITLE = "event_title";
-    private static final String EVENT_PLACE = "event_place";
-    private static final String IS_FULLDAY  = "is_fullday";
-    private static final String START_TIME  = "start_time";
-    private static final String END_TIME    = "end_time";
+//    private static final String KEY_ROWID = "_id";
+//    private static final String DATE      = "date";
+//    private static final String EVENT_TITLE = "event_title";
+//    private static final String EVENT_PLACE = "event_place";
+//    private static final String IS_FULLDAY  = "is_fullday";
+//    private static final String START_TIME  = "start_time";
+//    private static final String END_TIME    = "end_time";
+
+    public static final String KEY_ROWID = "_id";
+    public static final String DATE      = "date";
+    public static final String EVENT_TITLE = "event_title";
+    public static final String EVENT_PLACE = "event_place";
+    public static final String IS_FULLDAY  = "is_fullday";
+    public static final String START_TIME  = "start_time";
+    public static final String END_TIME    = "end_time";
 
     private CalendarDBHelper calendarDBHelper;
     private final Context mContext;
@@ -61,7 +76,38 @@ public class CalendarDatabase {
         calendarDBHelper.close();
     }
 
-    public void InsertEvent(){
+    public Cursor search_Event(String date){
+        String query = "SELECT * FROM " + TB_NAME + " WHERE " + DATE + " = ?";
+        Cursor cursor = mDatabase.rawQuery(query, new String[]{date});
+        if(null != cursor) {
+            Log.i(TAG, "searchEvent success: " + date);
+            return cursor;
+        }
+        Log.i(TAG, "searchEvent fail: " + date);
+        return null;
+    }
+
+    public void insert_Event(String date, String eventTitle, String eventPlace, int isFullday, String startTime, String endTime){
+//        String insert = "INSERT INTO " + TB_NAME + " ("
+//                + DATE + ", " + EVENT_TITLE + ", " + EVENT_PLACE + ", " + IS_FULLDAY + ", " + START_TIME + ", " + END_TIME + ") VALUES ( "
+//                + "'" + date + "', '" + eventTitle + "', '" + eventPlace + "', " + isFullday + ", '" + startTime + ", '" + endTime + "')";
+
+//        mDatabase.execSQL(insert);
+        ContentValues values = new ContentValues();
+        values.put(DATE, date);
+        values.put(EVENT_TITLE, eventTitle);
+        values.put(EVENT_PLACE, eventPlace);
+        values.put(IS_FULLDAY, isFullday);
+        values.put(START_TIME, startTime);
+        values.put(END_TIME, endTime);
+        mDatabase.insert(TB_NAME, null, values);
+    }
+
+    public void modify_Event(){
+
+    }
+
+    public void delete_Event(String id){
 
     }
 }

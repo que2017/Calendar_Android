@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".ShowEvent"></activity>
         <activity android:name=".AddEvent"></activity>
+        <activity android:name=".ModifyEvent"></activity>
     </application>
 
 </manifest>
