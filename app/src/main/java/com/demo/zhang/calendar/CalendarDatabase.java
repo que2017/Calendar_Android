@@ -77,7 +77,7 @@ public class CalendarDatabase {
     }
 
     public Cursor search_Event(String date){
-        String query = "SELECT * FROM " + TB_NAME + " WHERE " + DATE + " = ?";
+        String query = "SELECT * FROM " + TB_NAME + " WHERE " + DATE + " = ? ORDER BY " + START_TIME + ", " + END_TIME;
         Cursor cursor = mDatabase.rawQuery(query, new String[]{date});
         if(null != cursor) {
             Log.i(TAG, "searchEvent success: " + date);
@@ -103,11 +103,17 @@ public class CalendarDatabase {
         mDatabase.insert(TB_NAME, null, values);
     }
 
-    public void modify_Event(){
-
+    public void modify_Event(String id,  String eventTitle, String eventPlace, int isFullday, String startTime, String endTime){
+        ContentValues values = new ContentValues();
+        values.put(EVENT_TITLE, eventTitle);
+        values.put(EVENT_PLACE, eventPlace);
+        values.put(IS_FULLDAY, isFullday);
+        values.put(START_TIME, startTime);
+        values.put(END_TIME, endTime);
+        mDatabase.update(TB_NAME, values, KEY_ROWID + " = ?", new String[]{id});
     }
 
     public void delete_Event(String id){
-
+        mDatabase.delete(TB_NAME, KEY_ROWID + " = ?" ,new String[]{id});
     }
 }
