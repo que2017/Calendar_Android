@@ -12,6 +12,7 @@
         android:layout_weight="9"
         android:gravity="center">
         <ImageView
+            android:id="@+id/eventDote"
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:src="@drawable/ic_dote"/>

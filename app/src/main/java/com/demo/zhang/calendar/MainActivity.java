@@ -1,5 +1,6 @@
 package com.demo.zhang.calendar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,11 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends Activity implements View.OnClickListener{
     private final String TAG = MainActivity.class.getSimpleName();
@@ -68,6 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void showTodayEvents() {
         eventContainer.removeAllViews();
         CalendarDatabase cd = new CalendarDatabase(this);
@@ -76,6 +82,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         if(cursor.moveToFirst()){
             do{
                 View event = View.inflate(this, R.layout.events,null);
+                ImageView imgDote = (ImageView)event.findViewById(R.id.eventDote);
                 TextView tEventTitle = (TextView) event.findViewById(R.id.tEventTitle);
                 TextView tEventPlace = (TextView) event.findViewById(R.id.tEventPlace);
                 TextView tStartTime = (TextView) event.findViewById(R.id.tStartTime);
@@ -91,6 +98,20 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 tEventPlace.setText(eventPlace);
                 tStartTime.setText(startTime);
                 tEndTime.setText(endTime);
+
+                SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyyMMdd HH:mm");
+                try {
+                    Date date = simpledateformat.parse(cursor.getString(cursor.getColumnIndex(CalendarDatabase.DATE)).toString() + " " + endTime);
+                    if(System.currentTimeMillis() > date.getTime()){
+                        tEventTitle.setTextColor(R.color.finishedEvent);
+                        tEventPlace.setTextColor(R.color.finishedEvent);
+                        tStartTime.setTextColor(R.color.finishedEvent);
+                        tEndTime.setTextColor(R.color.finishedEvent);
+                        imgDote.setImageResource(R.drawable.ic_dote_finish);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
                 final Bundle bundle = new Bundle();
                 bundle.putString(CalendarDatabase.KEY_ROWID, id);
