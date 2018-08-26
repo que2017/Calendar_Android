@@ -20,6 +20,7 @@ public abstract class Add_Or_Modify_Event extends Activity implements View.OnCli
 
     public Button bQuit;
     public Button bCorrect;
+    public TextView interfaceTitle;
     public EditText eventTitle;
     public EditText eventPlace;
     public LinearLayout startTime;
@@ -53,6 +54,7 @@ public abstract class Add_Or_Modify_Event extends Activity implements View.OnCli
 
         bQuit = (Button)findViewById(R.id.eventQuit);
         bCorrect = (Button)findViewById(R.id.eventCorrect);
+        interfaceTitle = (TextView)findViewById(R.id.add_modify_event);
         eventTitle = (EditText)findViewById(R.id.eventTitle);
         eventPlace = (EditText)findViewById(R.id.eventPlace);
         startTime = (LinearLayout)findViewById(R.id.startTime);

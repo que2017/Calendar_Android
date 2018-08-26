@@ -9,7 +9,9 @@ public class ModifyEvent extends Add_Or_Modify_Event {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         init();
+        interfaceTitle.setText("修改活动");
 
         eventTitle.setText((String)bundle.get(CalendarDatabase.EVENT_TITLE));
         eventPlace.setText((String)bundle.get(CalendarDatabase.EVENT_PLACE));

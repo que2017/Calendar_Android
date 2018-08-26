@@ -16,6 +16,8 @@ public class AddEvent extends Add_Or_Modify_Event {
         super.onCreate(savedInstanceState);
 
         init();
+
+        interfaceTitle.setText("新建活动");
         currDate = (String) bundle.get("currDate");
 
         // 初始化startTimeShow 和 endTimeShow 的text
