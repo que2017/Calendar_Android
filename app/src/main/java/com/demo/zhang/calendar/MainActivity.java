@@ -23,23 +23,28 @@ import java.util.Date;
 public class MainActivity extends Activity implements View.OnClickListener{
     private final String TAG = MainActivity.class.getSimpleName();
 
+    private TextView showLunar;
     private Button bAdd;
     private LinearLayout eventContainer;
     private CalendarView calendarView;
+    private Calendar calendar;
 
     private String currDate;
+    private Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        showLunar = (TextView)findViewById(R.id.showLunar);
         bAdd = (Button)findViewById(R.id.bAddEvents);
         eventContainer = (LinearLayout)findViewById(R.id.eventContainer);
         calendarView = (CalendarView)findViewById(R.id.calendarView);
 
-        Calendar calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();
         currDate = dateToString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
+        date = calendar.getTime();
 //        Toast.makeText(MainActivity.this, currDate, Toast.LENGTH_SHORT).show();
 
         bAdd.setOnClickListener(this);
@@ -47,8 +52,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 currDate = dateToString(year, month + 1, dayOfMonth);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+                try {
+                    date = simpleDateFormat.parse(currDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 //                Toast.makeText(MainActivity.this, currDate, Toast.LENGTH_SHORT).show();
-                showTodayEvents();
+                showFocusDateEvents();
+                showFocusDateLunar(date);
             }
         });
     }
@@ -56,7 +68,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
-        showTodayEvents();
+        showFocusDateEvents();
+        showFocusDateLunar(date);
     }
 
     @Override
@@ -74,7 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
     @SuppressLint("ResourceAsColor")
-    private void showTodayEvents() {
+    private void showFocusDateEvents() {
         eventContainer.removeAllViews();
         CalendarDatabase cd = new CalendarDatabase(this);
         cd.open();
@@ -133,6 +146,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
         cd.close();
 
+    }
+
+    private void showFocusDateLunar(Date date){
+        Lunar lunar = new Lunar(date);
+        showLunar.setText("农历 " + lunar.animalsYear() + "年 " + lunar.toString());
     }
 
     private String dateToString(int year, int month, int day){

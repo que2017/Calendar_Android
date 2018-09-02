@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="black">#000000</color>
     <color name="finishedEvent">#b9b9b9</color>
+    <color name="lunarBg">#b9b9b9</color>
+    <color name="splitLine">#bebbbb</color>
 </resources>

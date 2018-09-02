@@ -24,20 +24,20 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="16dp"
                 android:textSize="24dp"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:text="查看活动"/>
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="#bebbbb"/>
+            android:background="@color/splitLine"/>
 
         <TextView
             android:id="@+id/tShowTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="事情"
-            android:textColor="#000"
+            android:text=""
+            android:textColor="@color/black"
             android:textSize="24dp"
             android:paddingTop="16dp"
             android:paddingLeft="16dp"/>
@@ -63,9 +63,9 @@
                 android:id="@+id/tShowPlace"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="公司"
+                android:text=""
                 android:textSize="20dp"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:layout_weight="2"/>
         </LinearLayout>
         <LinearLayout
@@ -89,9 +89,9 @@
                 android:id="@+id/tShowTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="开始时间-结束时间"
+                android:text=""
                 android:textSize="20dp"
-                android:textColor="#000"
+                android:textColor="@color/black"
                 android:layout_weight="2"/>
         </LinearLayout>
     </LinearLayout>

@@ -16,9 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"></CalendarView>
         <TextView
+            android:id="@+id/showLunar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#eef0f4"
+            android:background="@color/lunarBg"
             android:padding="5dp"
             android:text="今天 农历 七月初七"
             android:textColor="@color/black"
