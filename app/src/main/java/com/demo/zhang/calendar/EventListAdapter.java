@@ -13,6 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.demo.zhang.util.ConstantUtil;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,11 +60,11 @@ public class EventListAdapter extends BaseAdapter {
 
         try {
             temp = (JSONObject)mJSONArray.get(position);
-            tEventTitle.setText((String)temp.get(CalendarDatabase.EVENT_TITLE));
-            tEventPlace.setText((String)temp.get(CalendarDatabase.EVENT_PLACE));
-            tStartTime.setText((String)temp.get(CalendarDatabase.START_TIME));
-            tEndTime.setText((String)temp.get(CalendarDatabase.END_TIME));
-            if(System.currentTimeMillis() > (long)temp.get(CalendarDatabase.DATE)){
+            tEventTitle.setText((String)temp.get(ConstantUtil.EVENT_TITLE));
+            tEventPlace.setText((String)temp.get(ConstantUtil.EVENT_PLACE));
+            tStartTime.setText(String.valueOf(temp.get(ConstantUtil.START_TIME)));
+            tEndTime.setText(String.valueOf(temp.get(ConstantUtil.END_TIME)));
+            if(System.currentTimeMillis() > (long)temp.get(ConstantUtil.DATE)){
                 tEventTitle.setTextColor(R.color.finishedEvent);
                 tEventPlace.setTextColor(R.color.finishedEvent);
                 tStartTime.setTextColor(R.color.finishedEvent);
@@ -71,11 +73,11 @@ public class EventListAdapter extends BaseAdapter {
             }
 
             final Bundle bundle = new Bundle();
-            bundle.putString(CalendarDatabase.KEY_ROWID, (String) temp.get(CalendarDatabase.KEY_ROWID));
-            bundle.putString(CalendarDatabase.EVENT_TITLE, (String)temp.get(CalendarDatabase.EVENT_TITLE));
-            bundle.putString(CalendarDatabase.EVENT_PLACE, (String)temp.get(CalendarDatabase.EVENT_PLACE));
-            bundle.putString(CalendarDatabase.START_TIME, (String)temp.get(CalendarDatabase.START_TIME));
-            bundle.putString(CalendarDatabase.END_TIME, (String)temp.get(CalendarDatabase.END_TIME));
+            bundle.putString(ConstantUtil.KEY_ROWID, (String) temp.get(ConstantUtil.KEY_ROWID));
+            bundle.putString(ConstantUtil.EVENT_TITLE, (String)temp.get(ConstantUtil.EVENT_TITLE));
+            bundle.putString(ConstantUtil.EVENT_PLACE, (String)temp.get(ConstantUtil.EVENT_PLACE));
+            bundle.putLong(ConstantUtil.START_TIME, (long)temp.get(ConstantUtil.START_TIME));
+            bundle.putLong(ConstantUtil.END_TIME, (long)temp.get(ConstantUtil.END_TIME));
             event.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

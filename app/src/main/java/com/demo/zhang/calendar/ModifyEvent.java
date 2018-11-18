@@ -5,18 +5,21 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.demo.zhang.util.ConstantUtil;
+
 public class ModifyEvent extends Add_Or_Modify_Event {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkCalendarReadPermission();
         init();
         interfaceTitle.setText("修改活动");
 
-        eventTitle.setText((String)bundle.get(CalendarDatabase.EVENT_TITLE));
-        eventPlace.setText((String)bundle.get(CalendarDatabase.EVENT_PLACE));
-        startTimeShow.setText((String)bundle.get(CalendarDatabase.START_TIME));
-        endTimeShow.setText((String)bundle.get(CalendarDatabase.END_TIME));
+        eventTitle.setText((String)bundle.get(ConstantUtil.EVENT_TITLE));
+        eventPlace.setText((String)bundle.get(ConstantUtil.EVENT_PLACE));
+        startTimeShow.setText((String)bundle.get(ConstantUtil.START_TIME));
+        endTimeShow.setText((String)bundle.get(ConstantUtil.END_TIME));
     }
 
     @Override
@@ -32,7 +35,7 @@ public class ModifyEvent extends Add_Or_Modify_Event {
             return;
         }
         cd.open();
-        cd.modify_Event((String)bundle.get(CalendarDatabase.KEY_ROWID), title, place, isFullday, start, end);
+        cd.modify_Event((String)bundle.get(ConstantUtil.KEY_ROWID), title, place, isFullday, start, end);
         cd.close();
         this.finish();
     }

@@ -1,24 +1,30 @@
 package com.demo.zhang.calendar;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.demo.zhang.util.CalendarUtil;
+import com.demo.zhang.util.ConstantUtil;
+
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class AddEvent extends Add_Or_Modify_Event {
-    private String currDate;
+    private long date;
     private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkCalendarReadPermission();
         init();
 
         interfaceTitle.setText("新建活动");
-        currDate = (String) bundle.get("currDate");
+        date = (long) bundle.get(ConstantUtil.DATE);
 
         // 初始化startTimeShow 和 endTimeShow 的text
         int currHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -43,8 +49,20 @@ public class AddEvent extends Add_Or_Modify_Event {
             Log.i(TAG, "place or time is null");
             return;
         }
+        startTimeMillis = date + (digitalHour(start) * 60 + digitalMinute(start)) * 60 * 1000;
+        endTimeMillis = date + (digitalHour(end) * 60 + digitalMinute(end)) * 60 * 1000;
+
         cd.open();
-        cd.insert_Event(currDate, title, place, isFullday, start, end);
+//        cd.insert_Event(currDate, title, place, isFullday, start, end);
+        ContentValues values = new ContentValues();
+        values.put(ConstantUtil.TITLE, title);
+        values.put(ConstantUtil.DESCRIPTION, title);
+        values.put(ConstantUtil.EVENT_LOCATION, place);
+        values.put(ConstantUtil.DSTSRT, startTimeMillis);
+        values.put(ConstantUtil.DEND, endTimeMillis);
+        values.put(ConstantUtil.EVENT_TIMEZONE, "Asia/Shanghai");//TimeZone.getDefault().getDisplayName());
+        CalendarUtil.inertGoogleCalendar(this, values);
+
         cd.close();
         this.finish();
     }

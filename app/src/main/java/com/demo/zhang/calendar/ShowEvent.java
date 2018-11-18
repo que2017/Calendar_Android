@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.demo.zhang.util.ConstantUtil;
+import com.demo.zhang.util.DateOperatorUtil;
+
 public class ShowEvent extends Activity implements View.OnClickListener {
     private Button showEventBack;
     private Button editEvent;
@@ -33,10 +36,11 @@ public class ShowEvent extends Activity implements View.OnClickListener {
         showTime = (TextView)findViewById(R.id.tShowTime);
 
         bundle = this.getIntent().getExtras();
-        showTitle.setText((String)bundle.get(CalendarDatabase.EVENT_TITLE));
-        showTitle.setText((String)bundle.get(CalendarDatabase.EVENT_TITLE));
-        showPlace.setText((String)bundle.get(CalendarDatabase.EVENT_PLACE));
-        showTime.setText((String)bundle.get(CalendarDatabase.START_TIME) + " - " + (String)bundle.get(CalendarDatabase.END_TIME));
+        showTitle.setText((String)bundle.get(ConstantUtil.EVENT_TITLE));
+        showPlace.setText((String)bundle.get(ConstantUtil.EVENT_PLACE));
+//        showTime.setText((String)bundle.get(CalendarDatabase.START_TIME) + " - " + (String)bundle.get(CalendarDatabase.END_TIME));
+        showTime.setText(DateOperatorUtil.getShowTime((long)bundle.get(ConstantUtil.START_TIME)) + "\n"
+                + DateOperatorUtil.getShowTime((long)bundle.get(ConstantUtil.END_TIME)));
 
         showEventBack.setOnClickListener(this);
         editEvent.setOnClickListener(this);
@@ -59,7 +63,7 @@ public class ShowEvent extends Activity implements View.OnClickListener {
             case R.id.deleteEvent:
                 CalendarDatabase cd = new CalendarDatabase(this);
                 cd.open();
-                cd.delete_Event((String)bundle.get(CalendarDatabase.KEY_ROWID));
+                cd.delete_Event((String)bundle.get(ConstantUtil.KEY_ROWID));
                 cd.close();
                 this.finish();
                 break;

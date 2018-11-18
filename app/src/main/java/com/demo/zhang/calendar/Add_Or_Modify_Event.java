@@ -1,10 +1,13 @@
 package com.demo.zhang.calendar;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.TimePickerDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +16,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import com.demo.zhang.util.ConstantUtil;
+import com.demo.zhang.util.DateOperatorUtil;
 
 public abstract class Add_Or_Modify_Event extends Activity implements View.OnClickListener {
     public final String TAG = Add_Or_Modify_Event.class.getSimpleName();
@@ -29,6 +33,8 @@ public abstract class Add_Or_Modify_Event extends Activity implements View.OnCli
     public TextView endTimeShow;
 
     public int isFullday = 0;
+    public long startTimeMillis;
+    public long endTimeMillis;
     public Bundle bundle;
 
     @Override
@@ -45,6 +51,19 @@ public abstract class Add_Or_Modify_Event extends Activity implements View.OnCli
                 break;
             case R.id.endTime:
                 pickEndTime();
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch(requestCode) {
+            case ConstantUtil.CALENDAR_WRITE_PERMISSION:
+                if(grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "请开启日历写入权限！", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
                 break;
         }
     }
@@ -81,7 +100,7 @@ public abstract class Add_Or_Modify_Event extends Activity implements View.OnCli
     }
 
     private void pickTime(final TextView tv){
-        new TimePickerDialog(this, 2, new TimePickerDialog.OnTimeSetListener() {
+        new TimePickerDialog(this, TimePickerDialog.THEME_HOLO_DARK, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 tv.setText(stringTime(hourOfDay, minute));
@@ -93,13 +112,19 @@ public abstract class Add_Or_Modify_Event extends Activity implements View.OnCli
         return DateOperatorUtil.getTwoDigits(hour) + ":" + DateOperatorUtil.getTwoDigits(minute);
     }
 
-    private int digitalHour(String time){
+    public int digitalHour(String time){
         String[] str = time.split(":");
         return Integer.parseInt(str[0]);
     }
 
-    private int digitalMinute(String time){
+    public int digitalMinute(String time){
         String[] str = time.split(":");
         return Integer.parseInt(str[1]);
+    }
+
+    public void checkCalendarReadPermission() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, ConstantUtil.CALENDAR_WRITE_PERMISSION);
+        }
     }
 }

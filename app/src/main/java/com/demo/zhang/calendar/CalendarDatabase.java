@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.Date;
+import com.demo.zhang.util.ConstantUtil;
+
+//import java.util.Date;
 
 public class CalendarDatabase {
     private static final String TAG = CalendarDatabase.class.getSimpleName();
@@ -24,14 +26,6 @@ public class CalendarDatabase {
 //    private static final String IS_FULLDAY  = "is_fullday";
 //    private static final String START_TIME  = "start_time";
 //    private static final String END_TIME    = "end_time";
-
-    public static final String KEY_ROWID = "_id";
-    public static final String DATE      = "date";
-    public static final String EVENT_TITLE = "event_title";
-    public static final String EVENT_PLACE = "event_place";
-    public static final String IS_FULLDAY  = "is_fullday";
-    public static final String START_TIME  = "start_time";
-    public static final String END_TIME    = "end_time";
 
     private CalendarDBHelper calendarDBHelper;
     private final Context mContext;
@@ -50,13 +44,13 @@ public class CalendarDatabase {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE "
                     + TB_NAME + "("
-                    + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + DATE + " VARCHAR(8) NOT NULL, "
-                    + EVENT_TITLE + " TEXT, "
-                    + EVENT_PLACE + " TEXT NOT NULL, "
-                    + IS_FULLDAY + " INTEGER NOT NULL, "
-                    + START_TIME + " VARCHAR(5) NOT NULL, "
-                    + END_TIME + " VARCHAR(5) NOT NULL" + ")");
+                    + ConstantUtil.KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + ConstantUtil.CALENDAR_ID + " INTEGER NOT NULL, "
+                    + ConstantUtil.EVENT_TITLE + " TEXT, "
+                    + ConstantUtil.EVENT_PLACE + " TEXT NOT NULL, "
+                    + ConstantUtil.IS_FULLDAY + " INTEGER NOT NULL, "
+                    + ConstantUtil.START_TIME + " INTEGER NOT NULL, "
+                    + ConstantUtil.END_TIME + " INTEGER NOT NULL" + ")");
         }
 
         @Override
@@ -76,44 +70,48 @@ public class CalendarDatabase {
         calendarDBHelper.close();
     }
 
-    public Cursor search_Event(String date){
-        String query = "SELECT * FROM " + TB_NAME + " WHERE " + DATE + " = ? ORDER BY " + START_TIME + ", " + END_TIME;
-        Cursor cursor = mDatabase.rawQuery(query, new String[]{date});
+    public Cursor search_Event(long startDate, long endDate){
+        String query = "SELECT * FROM " + TB_NAME
+                + " WHERE (" + ConstantUtil.START_TIME + " >= ? AND "
+                + ConstantUtil.START_TIME + " < ?) OR ("
+                + ConstantUtil.END_TIME + " >= ? AND "
+                + ConstantUtil.END_TIME + " < ?) ORDER BY " + ConstantUtil.START_TIME + ", " + ConstantUtil.END_TIME;
+        Cursor cursor = mDatabase.rawQuery(query, new String[]{String.valueOf(startDate), String.valueOf(endDate), String.valueOf(startDate), String.valueOf(endDate)});
         if(null != cursor) {
-            Log.i(TAG, "searchEvent success: " + date);
+            Log.i(TAG, "searchEvent success");
             return cursor;
         }
-        Log.i(TAG, "searchEvent fail: " + date);
+        Log.i(TAG, "searchEvent fail");
         return null;
     }
 
-    public void insert_Event(String date, String eventTitle, String eventPlace, int isFullday, String startTime, String endTime){
+    public void insert_Event(long calendar_id, String eventTitle, String eventPlace, int isFullday, long startTime, long endTime){
 //        String insert = "INSERT INTO " + TB_NAME + " ("
 //                + DATE + ", " + EVENT_TITLE + ", " + EVENT_PLACE + ", " + IS_FULLDAY + ", " + START_TIME + ", " + END_TIME + ") VALUES ( "
 //                + "'" + date + "', '" + eventTitle + "', '" + eventPlace + "', " + isFullday + ", '" + startTime + ", '" + endTime + "')";
 
 //        mDatabase.execSQL(insert);
         ContentValues values = new ContentValues();
-        values.put(DATE, date);
-        values.put(EVENT_TITLE, eventTitle);
-        values.put(EVENT_PLACE, eventPlace);
-        values.put(IS_FULLDAY, isFullday);
-        values.put(START_TIME, startTime);
-        values.put(END_TIME, endTime);
+        values.put(ConstantUtil.CALENDAR_ID, calendar_id);
+        values.put(ConstantUtil.EVENT_TITLE, eventTitle);
+        values.put(ConstantUtil.EVENT_PLACE, eventPlace);
+        values.put(ConstantUtil.IS_FULLDAY, isFullday);
+        values.put(ConstantUtil.START_TIME, startTime);
+        values.put(ConstantUtil.END_TIME, endTime);
         mDatabase.insert(TB_NAME, null, values);
     }
 
     public void modify_Event(String id,  String eventTitle, String eventPlace, int isFullday, String startTime, String endTime){
         ContentValues values = new ContentValues();
-        values.put(EVENT_TITLE, eventTitle);
-        values.put(EVENT_PLACE, eventPlace);
-        values.put(IS_FULLDAY, isFullday);
-        values.put(START_TIME, startTime);
-        values.put(END_TIME, endTime);
-        mDatabase.update(TB_NAME, values, KEY_ROWID + " = ?", new String[]{id});
+        values.put(ConstantUtil.EVENT_TITLE, eventTitle);
+        values.put(ConstantUtil.EVENT_PLACE, eventPlace);
+        values.put(ConstantUtil.IS_FULLDAY, isFullday);
+        values.put(ConstantUtil.START_TIME, startTime);
+        values.put(ConstantUtil.END_TIME, endTime);
+        mDatabase.update(TB_NAME, values, ConstantUtil.KEY_ROWID + " = ?", new String[]{id});
     }
 
     public void delete_Event(String id){
-        mDatabase.delete(TB_NAME, KEY_ROWID + " = ?" ,new String[]{id});
+        mDatabase.delete(TB_NAME, ConstantUtil.KEY_ROWID + " = ?" ,new String[]{id});
     }
 }
