@@ -1,6 +1,5 @@
 package com.demo.zhang.calendar;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,10 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,10 +27,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     private TextView showLunar;
     private Button bAdd;
-    private LinearLayout eventContainer;
+    private ListView eventContainer;
     private CalendarView calendarView;
     private Calendar calendar;
 
+    private EventListAdapter eventListAdapter;
     private String currDate;
     private Date date;
 
@@ -39,7 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         showLunar = (TextView)findViewById(R.id.showLunar);
         bAdd = (Button)findViewById(R.id.bAddEvents);
-        eventContainer = (LinearLayout)findViewById(R.id.eventContainer);
+        eventContainer = (ListView)findViewById(R.id.eventContainer);
         calendarView = (CalendarView)findViewById(R.id.calendarView);
 
         calendar = Calendar.getInstance();
@@ -86,20 +89,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     private void showFocusDateEvents() {
-        eventContainer.removeAllViews();
+        eventContainer.setAdapter(null);
         CalendarDatabase cd = new CalendarDatabase(this);
         cd.open();
         Cursor cursor = cd.search_Event(currDate);
+        JSONArray jsonArray = new JSONArray();
         if(cursor.moveToFirst()){
             do{
-                View event = View.inflate(this, R.layout.events,null);
-                ImageView imgDote = (ImageView)event.findViewById(R.id.eventDote);
-                TextView tEventTitle = (TextView) event.findViewById(R.id.tEventTitle);
-                TextView tEventPlace = (TextView) event.findViewById(R.id.tEventPlace);
-                TextView tStartTime = (TextView) event.findViewById(R.id.tStartTime);
-                TextView tEndTime = (TextView) event.findViewById(R.id.tEndTime);
+                JSONObject jsonObject = new JSONObject();
 
                 String id = cursor.getString(cursor.getColumnIndex(CalendarDatabase.KEY_ROWID));
                 String eventTitle = cursor.getString(cursor.getColumnIndex(CalendarDatabase.EVENT_TITLE));
@@ -107,45 +105,26 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 String startTime = cursor.getString(cursor.getColumnIndex(CalendarDatabase.START_TIME));
                 String endTime = cursor.getString(cursor.getColumnIndex(CalendarDatabase.END_TIME));
 
-                tEventTitle.setText(eventTitle);
-                tEventPlace.setText(eventPlace);
-                tStartTime.setText(startTime);
-                tEndTime.setText(endTime);
-
                 SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyyMMdd HH:mm");
                 try {
                     Date date = simpledateformat.parse(cursor.getString(cursor.getColumnIndex(CalendarDatabase.DATE)).toString() + " " + endTime);
-                    if(System.currentTimeMillis() > date.getTime()){
-                        tEventTitle.setTextColor(R.color.finishedEvent);
-                        tEventPlace.setTextColor(R.color.finishedEvent);
-                        tStartTime.setTextColor(R.color.finishedEvent);
-                        tEndTime.setTextColor(R.color.finishedEvent);
-                        imgDote.setImageResource(R.drawable.ic_dote_finish);
-                    }
+                    jsonObject.put(CalendarDatabase.KEY_ROWID, id);
+                    jsonObject.put(CalendarDatabase.EVENT_TITLE, eventTitle);
+                    jsonObject.put(CalendarDatabase.EVENT_PLACE, eventPlace);
+                    jsonObject.put(CalendarDatabase.START_TIME, startTime);
+                    jsonObject.put(CalendarDatabase.END_TIME, endTime);
+                    jsonObject.put(CalendarDatabase.DATE, date.getTime());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                final Bundle bundle = new Bundle();
-                bundle.putString(CalendarDatabase.KEY_ROWID, id);
-                bundle.putString(CalendarDatabase.EVENT_TITLE, eventTitle);
-                bundle.putString(CalendarDatabase.EVENT_PLACE, eventPlace);
-                bundle.putString(CalendarDatabase.START_TIME, startTime);
-                bundle.putString(CalendarDatabase.END_TIME, endTime);
-                event.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.putExtras(bundle);
-                    intent.setClass(MainActivity.this, ShowEvent.class);
-                    MainActivity.this.startActivity(intent);
-                    }
-                });
-                eventContainer.addView(event);
+                jsonArray.put(jsonObject);
             }while(cursor.moveToNext());
+            eventListAdapter = new EventListAdapter(MainActivity.this, jsonArray);
+            eventContainer.setAdapter(eventListAdapter);
         }
         cd.close();
-
     }
 
     private void showFocusDateLunar(Date date){
