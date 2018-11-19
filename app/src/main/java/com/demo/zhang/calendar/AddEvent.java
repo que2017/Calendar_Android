@@ -60,7 +60,7 @@ public class AddEvent extends Add_Or_Modify_Event {
         values.put(ConstantUtil.EVENT_LOCATION, place);
         values.put(ConstantUtil.DSTSRT, startTimeMillis);
         values.put(ConstantUtil.DEND, endTimeMillis);
-        values.put(ConstantUtil.EVENT_TIMEZONE, "Asia/Shanghai");//TimeZone.getDefault().getDisplayName());
+        values.put(ConstantUtil.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
         CalendarUtil.inertGoogleCalendar(this, values);
 
         cd.close();
