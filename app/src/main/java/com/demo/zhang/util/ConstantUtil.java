@@ -11,11 +11,11 @@ public class ConstantUtil {
     public static final String _ID = "_id";
     public static final String CALENDAR_ID = "calendar_id";
     public static final String TITLE = "title";
-    public static final String EVENT_LOCATION = "event_location";
+    public static final String EVENT_LOCATION = "eventLocation";
     public static final String DESCRIPTION = "description";
     public static final String DSTSRT = "dtstart";
     public static final String DEND = "dtend";
-    public static final String EVENT_TIMEZONE = "event_timezone";
+    public static final String EVENT_TIMEZONE = "eventTimezone";
     public static final int CAL_ID = 1;
 
     // for demo calendar database
@@ -27,4 +27,6 @@ public class ConstantUtil {
     public static final String END_TIME    = "end_time";
 
     public static final String DATE = "date";
+
+    public static final long ONE_DAY = 24 * 60 * 60 * 1000;
 }

@@ -31,7 +31,6 @@ import java.util.Date;
 
 public class MainActivity extends Activity implements View.OnClickListener{
     private final String TAG = MainActivity.class.getSimpleName();
-    private final long ONE_DAY = 24 * 60 * 60 * 1000;
 
     private TextView showLunar;
     private Button bAdd;
@@ -117,7 +116,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         CalendarDatabase cd = new CalendarDatabase(this);
         cd.open();
 //        Cursor cursor = cd.search_Event(date.getTime(), date.getTime() + ONE_DAY);
-        Cursor cursor = CalendarUtil.queryGoogleCalendar(this, date.getTime(), date.getTime() + ONE_DAY);
+        Cursor cursor = CalendarUtil.queryGoogleCalendar(this, date.getTime(), date.getTime() + ConstantUtil.ONE_DAY);
         if (null == cursor) {
             return;
         }
@@ -129,17 +128,16 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
                     String id = cursor.getString(cursor.getColumnIndex(ConstantUtil._ID));
                     String eventTitle = cursor.getString(cursor.getColumnIndex(ConstantUtil.TITLE));
-                    String startTime = cursor.getString(cursor.getColumnIndex(ConstantUtil.DSTSRT));
-                    String endTime = cursor.getString(cursor.getColumnIndex(ConstantUtil.DEND));
-                    if(-1 != cursor.getColumnIndex(ConstantUtil.EVENT_LOCATION)) {
-                        jsonObject.put(ConstantUtil.EVENT_PLACE, cursor.getString(cursor.getColumnIndex(ConstantUtil.EVENT_LOCATION)));
-                    }
+                    String eventPlace = cursor.getString(cursor.getColumnIndex(ConstantUtil.EVENT_LOCATION));
+                    long startTime = cursor.getLong(cursor.getColumnIndex(ConstantUtil.DSTSRT));
+                    long endTime = cursor.getLong(cursor.getColumnIndex(ConstantUtil.DEND));
 
 //                SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyyMMdd HH:mm");
 
                     long eventEndTime = cursor.getLong(cursor.getColumnIndex(ConstantUtil.DEND));
                     jsonObject.put(ConstantUtil.KEY_ROWID, id);
                     jsonObject.put(ConstantUtil.EVENT_TITLE, eventTitle);
+                    jsonObject.put(ConstantUtil.EVENT_PLACE, eventPlace);
                     jsonObject.put(ConstantUtil.START_TIME, startTime);
                     jsonObject.put(ConstantUtil.END_TIME, endTime);
                     jsonObject.put(ConstantUtil.DATE, eventEndTime);

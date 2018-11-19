@@ -56,7 +56,7 @@ public class AddEvent extends Add_Or_Modify_Event {
 //        cd.insert_Event(currDate, title, place, isFullday, start, end);
         ContentValues values = new ContentValues();
         values.put(ConstantUtil.TITLE, title);
-        values.put(ConstantUtil.DESCRIPTION, title);
+//        values.put(ConstantUtil.DESCRIPTION, title);
         values.put(ConstantUtil.EVENT_LOCATION, place);
         values.put(ConstantUtil.DSTSRT, startTimeMillis);
         values.put(ConstantUtil.DEND, endTimeMillis);

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.demo.zhang.util.ConstantUtil;
+import com.demo.zhang.util.DateOperatorUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,8 +63,8 @@ public class EventListAdapter extends BaseAdapter {
             temp = (JSONObject)mJSONArray.get(position);
             tEventTitle.setText((String)temp.get(ConstantUtil.EVENT_TITLE));
             tEventPlace.setText((String)temp.get(ConstantUtil.EVENT_PLACE));
-            tStartTime.setText(String.valueOf(temp.get(ConstantUtil.START_TIME)));
-            tEndTime.setText(String.valueOf(temp.get(ConstantUtil.END_TIME)));
+            tStartTime.setText(DateOperatorUtil.getShowTime((long)temp.get(ConstantUtil.START_TIME)));
+            tEndTime.setText(DateOperatorUtil.getShowTime((long)temp.get(ConstantUtil.END_TIME)));
             if(System.currentTimeMillis() > (long)temp.get(ConstantUtil.DATE)){
                 tEventTitle.setTextColor(R.color.finishedEvent);
                 tEventPlace.setTextColor(R.color.finishedEvent);

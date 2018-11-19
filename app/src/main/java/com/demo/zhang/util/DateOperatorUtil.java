@@ -19,6 +19,7 @@ public class DateOperatorUtil {
         int date = calendar.get(Calendar.DAY_OF_MONTH);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+//        return year + "-" + month + "-" + date + " " + hour + ":" + minute;
+        return getTwoDigits(hour) + ":" + getTwoDigits(minute);
     }
 }
