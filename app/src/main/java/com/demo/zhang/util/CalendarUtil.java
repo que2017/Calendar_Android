@@ -41,8 +41,16 @@ public class CalendarUtil {
 //        values.remove(ConstantUtil.KEY_ROWID);
 //        values.put(ConstantUtil.CALENDAR_ID, checkCalendarAccount(context));
         Uri uri = Uri.parse(ConstantUtil.CALENDAR_EVENT_URI);
-//        uri = ContentUris.withAppendedId(uri, _id);
-        cr.update(uri, values, ConstantUtil.KEY_ROWID + " = ? ", new String[]{String.valueOf(_id)});
+        uri = ContentUris.withAppendedId(uri, _id);
+        cr.update(uri, values, null, null);
+//        cr.update(uri, values, ConstantUtil.KEY_ROWID + " = ? ", new String[]{String.valueOf(_id)});
+    }
+
+    public static void deleteGoogleCalendar(Context context, long _id) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.parse(ConstantUtil.CALENDAR_EVENT_URI);
+        uri = ContentUris.withAppendedId(uri, _id);
+        cr.delete(uri, null, null);
     }
 
     private static int checkCalendarAccount(Context context) {

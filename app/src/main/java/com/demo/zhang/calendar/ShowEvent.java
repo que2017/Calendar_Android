@@ -9,8 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.demo.zhang.util.CalendarUtil;
 import com.demo.zhang.util.ConstantUtil;
 import com.demo.zhang.util.DateOperatorUtil;
+
+import java.util.Calendar;
 
 public class ShowEvent extends Activity implements View.OnClickListener {
     private Button showEventBack;
@@ -61,10 +64,11 @@ public class ShowEvent extends Activity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.deleteEvent:
-                CalendarDatabase cd = new CalendarDatabase(this);
-                cd.open();
-                cd.delete_Event((String)bundle.get(ConstantUtil.KEY_ROWID));
-                cd.close();
+//                CalendarDatabase cd = new CalendarDatabase(this);
+//                cd.open();
+//                cd.delete_Event((String)bundle.get(ConstantUtil.KEY_ROWID));
+//                cd.close();
+                CalendarUtil.deleteGoogleCalendar(this, (long) bundle.get(ConstantUtil.KEY_ROWID));
                 this.finish();
                 break;
         }
