@@ -41,6 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private EventListAdapter eventListAdapter;
     private String currDate;
     private Date date;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 currDate = dateToString(year, month + 1, dayOfMonth);
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
                 try {
                     date = simpleDateFormat.parse(currDate);
                 } catch (ParseException e) {
@@ -91,7 +91,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, AddEvent.class);
                 Bundle bundle = new Bundle();
-                bundle.putLong(ConstantUtil.DATE, date.getTime());
+                bundle.putLong(ConstantUtil.DATE, (date.getTime() / ConstantUtil.ONE_DAY) * ConstantUtil.ONE_DAY);
                 intent.putExtras(bundle);
                 MainActivity.this.startActivity(intent);
                 break;
@@ -113,8 +113,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     private void showFocusDateEvents() {
         eventContainer.setAdapter(null);
-        CalendarDatabase cd = new CalendarDatabase(this);
-        cd.open();
+//        CalendarDatabase cd = new CalendarDatabase(this);
+//        cd.open();
 //        Cursor cursor = cd.search_Event(date.getTime(), date.getTime() + ONE_DAY);
         Cursor cursor = CalendarUtil.queryGoogleCalendar(this, date.getTime(), date.getTime() + ConstantUtil.ONE_DAY);
         if (null == cursor) {
@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 do {
                     JSONObject jsonObject = new JSONObject();
 
-                    String id = cursor.getString(cursor.getColumnIndex(ConstantUtil._ID));
+                    long id = cursor.getLong(cursor.getColumnIndex(ConstantUtil._ID));
                     String eventTitle = cursor.getString(cursor.getColumnIndex(ConstantUtil.TITLE));
                     String eventPlace = cursor.getString(cursor.getColumnIndex(ConstantUtil.EVENT_LOCATION));
                     long startTime = cursor.getLong(cursor.getColumnIndex(ConstantUtil.DSTSRT));
@@ -134,13 +134,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 //                SimpleDateFormat simpledateformat = new SimpleDateFormat("yyyyMMdd HH:mm");
 
-                    long eventEndTime = cursor.getLong(cursor.getColumnIndex(ConstantUtil.DEND));
+//                    long eventEndTime = cursor.getLong(cursor.getColumnIndex(ConstantUtil.DEND));
                     jsonObject.put(ConstantUtil.KEY_ROWID, id);
                     jsonObject.put(ConstantUtil.EVENT_TITLE, eventTitle);
                     jsonObject.put(ConstantUtil.EVENT_PLACE, eventPlace);
                     jsonObject.put(ConstantUtil.START_TIME, startTime);
                     jsonObject.put(ConstantUtil.END_TIME, endTime);
-                    jsonObject.put(ConstantUtil.DATE, eventEndTime);
+                    jsonObject.put(ConstantUtil.DATE, simpleDateFormat.parse(currDate).getTime());
                     jsonArray.put(jsonObject);
                 } while (cursor.moveToNext());
             }
@@ -153,7 +153,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
         eventListAdapter = new EventListAdapter(MainActivity.this, jsonArray);
         eventContainer.setAdapter(eventListAdapter);
-        cd.close();
+//        cd.close();
     }
 
     private void showFocusDateLunar(Date date){

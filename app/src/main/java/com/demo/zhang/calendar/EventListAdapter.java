@@ -65,7 +65,7 @@ public class EventListAdapter extends BaseAdapter {
             tEventPlace.setText((String)temp.get(ConstantUtil.EVENT_PLACE));
             tStartTime.setText(DateOperatorUtil.getShowTime((long)temp.get(ConstantUtil.START_TIME)));
             tEndTime.setText(DateOperatorUtil.getShowTime((long)temp.get(ConstantUtil.END_TIME)));
-            if(System.currentTimeMillis() > (long)temp.get(ConstantUtil.DATE)){
+            if(System.currentTimeMillis() > (long)temp.get(ConstantUtil.END_TIME)){
                 tEventTitle.setTextColor(R.color.finishedEvent);
                 tEventPlace.setTextColor(R.color.finishedEvent);
                 tStartTime.setTextColor(R.color.finishedEvent);
@@ -74,11 +74,12 @@ public class EventListAdapter extends BaseAdapter {
             }
 
             final Bundle bundle = new Bundle();
-            bundle.putString(ConstantUtil.KEY_ROWID, (String) temp.get(ConstantUtil.KEY_ROWID));
+            bundle.putLong(ConstantUtil.KEY_ROWID, (long) temp.get(ConstantUtil.KEY_ROWID));
             bundle.putString(ConstantUtil.EVENT_TITLE, (String)temp.get(ConstantUtil.EVENT_TITLE));
             bundle.putString(ConstantUtil.EVENT_PLACE, (String)temp.get(ConstantUtil.EVENT_PLACE));
             bundle.putLong(ConstantUtil.START_TIME, (long)temp.get(ConstantUtil.START_TIME));
             bundle.putLong(ConstantUtil.END_TIME, (long)temp.get(ConstantUtil.END_TIME));
+            bundle.putLong(ConstantUtil.DATE, (long)temp.get(ConstantUtil.DATE));
             event.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

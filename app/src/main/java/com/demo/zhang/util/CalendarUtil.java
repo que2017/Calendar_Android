@@ -1,10 +1,12 @@
 package com.demo.zhang.util;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 
 public class CalendarUtil {
 
@@ -31,6 +33,16 @@ public class CalendarUtil {
         Uri uri = Uri.parse(ConstantUtil.CALENDAR_EVENT_URI);
         values.put(ConstantUtil.CALENDAR_ID, checkCalendarAccount(context));
         cr.insert(uri, values);
+    }
+
+    public static void updateGoogleCalendar(Context context, ContentValues values) {
+        ContentResolver cr = context.getContentResolver();
+        long _id = (long) values.get(ConstantUtil.KEY_ROWID);
+//        values.remove(ConstantUtil.KEY_ROWID);
+//        values.put(ConstantUtil.CALENDAR_ID, checkCalendarAccount(context));
+        Uri uri = Uri.parse(ConstantUtil.CALENDAR_EVENT_URI);
+//        uri = ContentUris.withAppendedId(uri, _id);
+        cr.update(uri, values, ConstantUtil.KEY_ROWID + " = ? ", new String[]{String.valueOf(_id)});
     }
 
     private static int checkCalendarAccount(Context context) {

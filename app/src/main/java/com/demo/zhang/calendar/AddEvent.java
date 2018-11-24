@@ -39,7 +39,7 @@ public class AddEvent extends Add_Or_Modify_Event {
 
     @Override
     public void addEventToTable() {
-        CalendarDatabase cd = new CalendarDatabase(this);
+//        CalendarDatabase cd = new CalendarDatabase(this);
         String title = eventTitle.getText().toString();
         String place = eventPlace.getText().toString();
         String start = startTimeShow.getText().toString();
@@ -52,7 +52,7 @@ public class AddEvent extends Add_Or_Modify_Event {
         startTimeMillis = date + (digitalHour(start) * 60 + digitalMinute(start)) * 60 * 1000;
         endTimeMillis = date + (digitalHour(end) * 60 + digitalMinute(end)) * 60 * 1000;
 
-        cd.open();
+//        cd.open();
 //        cd.insert_Event(currDate, title, place, isFullday, start, end);
         ContentValues values = new ContentValues();
         values.put(ConstantUtil.TITLE, title);
@@ -63,7 +63,7 @@ public class AddEvent extends Add_Or_Modify_Event {
         values.put(ConstantUtil.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
         CalendarUtil.inertGoogleCalendar(this, values);
 
-        cd.close();
+//        cd.close();
         this.finish();
     }
 }
