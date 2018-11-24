@@ -56,7 +56,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         calendar = Calendar.getInstance();
         currDate = dateToString(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE));
-        date = calendar.getTime();
+        try {
+            date = simpleDateFormat.parse(currDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 //        Toast.makeText(MainActivity.this, currDate, Toast.LENGTH_SHORT).show();
 
         bAdd.setOnClickListener(this);
@@ -91,7 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, AddEvent.class);
                 Bundle bundle = new Bundle();
-                bundle.putLong(ConstantUtil.DATE, (date.getTime() / ConstantUtil.ONE_DAY) * ConstantUtil.ONE_DAY);
+                bundle.putLong(ConstantUtil.DATE, date.getTime());
                 intent.putExtras(bundle);
                 MainActivity.this.startActivity(intent);
                 break;
@@ -144,7 +148,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
                     jsonArray.put(jsonObject);
                 } while (cursor.moveToNext());
             }
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         } finally {
             if(cursor != null) {
